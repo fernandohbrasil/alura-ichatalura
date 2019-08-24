@@ -1,7 +1,12 @@
 package com.br.fernandohbrasil.ichatalura;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +17,7 @@ import com.br.fernandohbrasil.ichatalura.adapter.MensagemAdapter;
 import com.br.fernandohbrasil.ichatalura.app.ChatApplication;
 import com.br.fernandohbrasil.ichatalura.component.ChatComponent;
 import com.br.fernandohbrasil.ichatalura.callback.EnviarMensagemCallback;
+import com.br.fernandohbrasil.ichatalura.event.MensagemEvent;
 import com.br.fernandohbrasil.ichatalura.model.Mensagem;
 import com.br.fernandohbrasil.ichatalura.service.ChatService;
 
@@ -20,6 +26,9 @@ import java.util.List;
 
 import com.br.fernandohbrasil.ichatalura.callback.OuvirMensagensCallBack;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -49,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     ChatService chatService;
 
+    @Inject
+    EventBus eventBus;
+
     private ChatComponent component;
 
     @Override
@@ -69,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         mensagens = new ArrayList<>();
 
         ouvirMensagem();
+
+        eventBus.register(this);
     }
 
     @OnClick(R.id.btn_enviar)
@@ -76,16 +90,26 @@ public class MainActivity extends AppCompatActivity {
         chatService.enviar(new Mensagem(idDoCliente, editText.getText().toString())).enqueue(new EnviarMensagemCallback());
     }
 
-    public void colocaNaLista(Mensagem mensagem) {
-        mensagens.add(mensagem);
+
+    @Subscribe
+    public void colocaNaLista(MensagemEvent mensagemEvent) {
+        mensagens.add(mensagemEvent.getMensagem());
         MensagemAdapter adapter = new MensagemAdapter(idDoCliente, mensagens, this);
         listaDeMensagens.setAdapter(adapter);
 
         ouvirMensagem();
     }
 
+    @Subscribe
     public void ouvirMensagem(){
         Call<Mensagem> call = chatService.ouvirMensagens();
-        call.enqueue(new OuvirMensagensCallBack(this));
+        call.enqueue(new OuvirMensagensCallBack(this, eventBus));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        eventBus.unregister(this);
     }
 }
