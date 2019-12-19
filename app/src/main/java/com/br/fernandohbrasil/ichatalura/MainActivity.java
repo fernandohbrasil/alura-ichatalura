@@ -1,34 +1,28 @@
 package com.br.fernandohbrasil.ichatalura;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.br.fernandohbrasil.ichatalura.adapter.MensagemAdapter;
 import com.br.fernandohbrasil.ichatalura.app.ChatApplication;
-import com.br.fernandohbrasil.ichatalura.component.ChatComponent;
 import com.br.fernandohbrasil.ichatalura.callback.EnviarMensagemCallback;
+import com.br.fernandohbrasil.ichatalura.callback.OuvirMensagensCallBack;
+import com.br.fernandohbrasil.ichatalura.component.ChatComponent;
 import com.br.fernandohbrasil.ichatalura.event.MensagemEvent;
 import com.br.fernandohbrasil.ichatalura.model.Mensagem;
 import com.br.fernandohbrasil.ichatalura.service.ChatService;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.br.fernandohbrasil.ichatalura.callback.OuvirMensagensCallBack;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 

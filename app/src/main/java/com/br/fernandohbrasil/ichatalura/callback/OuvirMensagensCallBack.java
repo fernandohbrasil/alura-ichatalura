@@ -1,11 +1,7 @@
 package com.br.fernandohbrasil.ichatalura.callback;
 
 import android.content.Context;
-import android.content.Intent;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import com.br.fernandohbrasil.ichatalura.MainActivity;
 import com.br.fernandohbrasil.ichatalura.event.MensagemEvent;
 import com.br.fernandohbrasil.ichatalura.model.Mensagem;
 
